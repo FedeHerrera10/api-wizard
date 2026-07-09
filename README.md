@@ -14,19 +14,23 @@ Olvídate de la configuración manual. Responde 3 preguntas y obtén un proyecto
 ## 🌟 Características
 
 ### ⚡ Generación Automática
+
 - Clona el template [spring-secure-api-starter](https://github.com/FedeHerrera10/spring-secure-api-starter) con shallow clone
 - Refactoriza packages, artifactId y groupId en todo el proyecto
 - Renombra la clase principal automáticamente
 
 ### 🗄️ Base de Datos
+
 - Configura el nombre de la BD en `docker-compose.yaml` y `application.yml`
 - Soporta MySQL con Flyway migrations
 
 ### 📁 Control de Salida
+
 - Elige el directorio donde se creará el proyecto
 - Default: carpeta padre del wizard
 
 ### 🔧 Stack del Proyecto Generado
+
 - **Auth:** Spring Security + JWT + OAuth2 (Google/GitHub)
 - **DB:** MySQL + Flyway
 - **Monitoreo:** Prometheus + Grafana + Loki
@@ -37,10 +41,10 @@ Olvídate de la configuración manual. Responde 3 preguntas y obtén un proyecto
 
 ## 📋 Requisitos
 
-| Herramienta | Versión |
-|-------------|---------|
-| Java | 17+ |
-| Git | Cualquier versión moderna |
+| Herramienta | Versión                   |
+| ----------- | ------------------------- |
+| Java        | 17+                       |
+| Git         | Cualquier versión moderna |
 
 > **Nota:** Maven solo es necesario si compilás desde el código fuente. Si usás el JAR directo no hace falta.
 
@@ -50,19 +54,27 @@ Olvídate de la configuración manual. Responde 3 preguntas y obtén un proyecto
 
 ### Opción 1 — Descargar el JAR (recomendado)
 
+**Linux / macOS:**
+
 ```bash
-curl -LO https://github.com/TU_USUARIO/api-wizard/releases/download/v1.0.0/api-wizard-1.0-SNAPSHOT.jar
+curl -L -o api-wizard.jar "https://github.com/FedeHerrera10/api-wizard/releases/download/v1.0.0/api-wizard.jar"
+```
+
+**Windows (cmd o PowerShell):**
+
+```powershell
+curl.exe -L -o api-wizard.jar "https://github.com/FedeHerrera10/api-wizard/releases/download/v1.0.0/api-wizard.jar"
 ```
 
 ### Opción 2 — Clonar y compilar
 
 ```bash
-git clone https://github.com/TU_USUARIO/api-wizard.git
+git clone https://github.com/FedeHerrera10/api-wizard.git
 cd api-wizard
 mvn clean package -q
 ```
 
-El JAR se genera en `target/api-wizard-1.0-SNAPSHOT.jar`.
+El JAR se genera en `target/api-wizard.jar`.
 
 ---
 
@@ -71,24 +83,24 @@ El JAR se genera en `target/api-wizard-1.0-SNAPSHOT.jar`.
 ### Sintaxis
 
 ```bash
-java -jar api-wizard-1.0-SNAPSHOT.jar init [opciones]
+java -jar api-wizard.jar init [opciones]
 ```
 
 ### Opciones del Comando `init`
 
-| Flag | Descripción | Default |
-|------|-------------|---------|
-| `-n`, `--name` | Nombre del proyecto | `my-api` |
-| `-p`, `--package` | Package base (ej: `com.acme.miapi`) | `com.fedeherrera.{name}` |
-| `-db`, `--db-name` | Nombre de la base de datos | `{name}` en snake_case |
-| `-o`, `--output` | Directorio de salida | Carpeta padre `../` |
-| `-h`, `--help` | Muestra la ayuda | - |
-| `-V`, `--version` | Muestra la versión | - |
+| Flag               | Descripción                         | Default                  |
+| ------------------ | ----------------------------------- | ------------------------ |
+| `-n`, `--name`     | Nombre del proyecto                 | `my-api`                 |
+| `-p`, `--package`  | Package base (ej: `com.acme.miapi`) | `com.fedeherrera.{name}` |
+| `-db`, `--db-name` | Nombre de la base de datos          | `{name}` en snake_case   |
+| `-o`, `--output`   | Directorio de salida                | Carpeta padre `../`      |
+| `-h`, `--help`     | Muestra la ayuda                    | -                        |
+| `-V`, `--version`  | Muestra la versión                  | -                        |
 
 ### Modo Interactivo
 
 ```bash
-java -jar api-wizard-1.0-SNAPSHOT.jar init
+java -jar api-wizard.jar init
 ```
 
 El asistente te guiará paso a paso:
@@ -102,7 +114,7 @@ Nombre de la Base de Datos [ecommerce_api]:
 ### Modo No Interactivo (Flags)
 
 ```bash
-java -jar api-wizard-1.0-SNAPSHOT.jar init \
+java -jar api-wizard.jar init \
   -n ecommerce-api \
   -p com.acme.ecommerce \
   -db ecommerce_db \
@@ -175,7 +187,7 @@ java -jar api-wizard.jar init --help
 Agregar al `~/.bashrc` o `~/.zshrc`:
 
 ```bash
-alias api-wizard='java -jar /ruta/completa/api-wizard-1.0-SNAPSHOT.jar'
+alias api-wizard='java -jar /ruta/completa/api-wizard.jar'
 ```
 
 ### Windows
