@@ -31,8 +31,15 @@ public class InitCommand implements Runnable {
     @Override
     public void run() {
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Configurando nuevo proyecto de API...\n");
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("""
+                ###  ####  ###    #   # ### #####  ###  ####  ####
+                #   # #   #  #     #   #  #     #  #   # #   # #   #
+                ##### ####   #     # # #  #    #   ##### ####  #   #
+                #   # #      #     ## ##  #   #    #   # #  #  #   #
+                #   # #     ###    #   # ### ##### #   # #   # ####
+                """);
+        System.out.println("---------------------by fede herrera-----------------------------");
 
         String calculatedArtifactId = resolveProjectName(scanner);
         resolveBasePackage(scanner, calculatedArtifactId);
@@ -42,11 +49,11 @@ public class InitCommand implements Runnable {
         Path projectDir = resolveOutputDir().resolve(calculatedArtifactId).normalize();
         String projectPath = projectDir.toString();
 
-        System.out.println("Configuracion aceptada:");
-        System.out.println("Ruta:                 " + projectPath);
-        System.out.println("Package Destino:      " + basePackage);
-        System.out.println("Tipo de Base de Datos:" + dbType);
-        System.out.println("Base de Datos:        " + dbName + "\n");
+        System.out.println("[Info:]Configuracion aceptada:");
+        System.out.println("[Info:]Ruta:                 " + projectPath);
+        System.out.println("[Info:]Package Destino:      " + basePackage);
+        System.out.println("[Info:]Tipo de Base de Datos:" + dbType);
+        System.out.println("[Info:]Base de Datos:        " + dbName + "\n");
 
         if (cloneTemplate(projectPath)) {
             GitUtils.cleanGitMetadata(projectPath);
@@ -60,8 +67,15 @@ public class InitCommand implements Runnable {
             ProjectConfigurator.refactorMainClassName(projectPath, newMainClass);
             ProjectConfigurator.refactorDatabaseName(projectPath, dbName);
             ProjectConfigurator.refactorEnvFile(projectPath, calculatedArtifactId, dbType, dbName);
-
-            System.out.println("Tu API REST ha sido configurada con exito en '" + projectPath + "'!");
+            System.out.println("---------------------------------------------------------------------------");
+            System.out.println("\n[+] Tu API REST ha sido configurada con exito en '" + projectPath + "'!\n");
+            System.out.println("---------------------------------------------------------------------------");
+            System.out.println("[1] Para iniciar el proyecto, ejecuta:");
+            System.out.println("[2] cd " + projectPath);
+            System.out.println("[3] modifica tu archivo .env");
+            System.out.println("[4] mvn clean install");
+            System.out.println("[5] mvn spring-boot:run");
+            System.out.println("---------------------------------------------------------------------------");
         }
     }
 
@@ -113,7 +127,7 @@ public class InitCommand implements Runnable {
 
     private boolean cloneTemplate(String projectPath) {
         try {
-            System.out.println("Clonando el template de Git (shallow clone)...");
+            System.out.println("[Info:] Clonando el template de Git (shallow clone)...");
             ProcessBuilder pb = new ProcessBuilder("git", "clone", "--depth", "1", TEMPLATE_REPO, projectPath);
             pb.inheritIO();
             int exitCode = pb.start().waitFor();
@@ -122,10 +136,10 @@ public class InitCommand implements Runnable {
                 System.out.println("\nTemplate clonado con exito!");
                 return true;
             }
-            System.err.println("Hubo un error al ejecutar 'git clone'.");
+            System.err.println("[Error:] Hubo un error al ejecutar 'git clone'.");
             return false;
         } catch (IOException | InterruptedException e) {
-            System.err.println("Error del sistema: " + e.getMessage());
+            System.err.println("[Error:] Error del sistema: " + e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }

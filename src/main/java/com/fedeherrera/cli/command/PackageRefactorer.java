@@ -13,17 +13,18 @@ import java.util.stream.Stream;
 
 final class PackageRefactorer {
 
-    private PackageRefactorer() {}
+    private PackageRefactorer() {
+    }
 
     static void refactorJavaPackages(String projectFolder, String oldPackage, String newPackage) {
-        System.out.println("Refactorizando codigo fuente y directorios fisicos...");
+        System.out.println("[Info:]Refactorizando codigo fuente y directorios fisicos...");
 
         replacePackageText(projectFolder, oldPackage, newPackage);
 
         relocateSourceSet(Paths.get(projectFolder, "src", "main", "java"), oldPackage, newPackage);
         relocateSourceSet(Paths.get(projectFolder, "src", "test", "java"), oldPackage, newPackage);
 
-        System.out.println("Estructura de paquetes reubicada y carpetas viejas eliminadas.");
+        System.out.println("[Info:]Estructura de paquetes reubicada y carpetas viejas eliminadas.");
     }
 
     private static void replacePackageText(String projectFolder, String oldPackage, String newPackage) {
@@ -40,11 +41,11 @@ final class PackageRefactorer {
                                 Files.writeString(path, updatedContent, StandardCharsets.UTF_8);
                             }
                         } catch (IOException e) {
-                            System.err.println("No se pudo actualizar: " + path.getFileName());
+                            System.err.println("[Error:]No se pudo actualizar: " + path.getFileName());
                         }
                     });
         } catch (IOException e) {
-            System.err.println("Error al procesar contenidos de texto: " + e.getMessage());
+            System.err.println("[Error:]Error al procesar contenidos de texto: " + e.getMessage());
         }
     }
 
@@ -74,12 +75,13 @@ final class PackageRefactorer {
                 try {
                     Files.move(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {
-                    System.err.println("move fallo, intentando copy+delete: " + sourceFile + " - " + e.getMessage());
+                    System.err.println(
+                            "[Error:]move fallo, intentando copy+delete: " + sourceFile + " - " + e.getMessage());
                     try {
                         Files.copy(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
                         Files.delete(sourceFile);
                     } catch (IOException e2) {
-                        System.err.println("Error al copiar archivo: " + sourceFile + " - " + e2.getMessage());
+                        System.err.println("[Error:] Error al copiar archivo: " + sourceFile + " - " + e2.getMessage());
                     }
                 }
             }
@@ -101,7 +103,7 @@ final class PackageRefactorer {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error critico en reubicacion fisica (" + javaRoot + "): " + e.getMessage());
+            System.err.println("[Error:]Error critico en reubicacion fisica (" + javaRoot + "): " + e.getMessage());
         }
     }
 }

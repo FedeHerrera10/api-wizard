@@ -12,6 +12,7 @@ public class ApiWizardCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("The api wizard command");
+        System.out.println(
+                "Asistente interactivo para crear APIs REST by Fede Herrera.");
     }
 }

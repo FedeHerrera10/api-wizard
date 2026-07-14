@@ -15,10 +15,11 @@ final class ProjectConfigurator {
     private static final String OLD_MAIN_CLASS = "SpringSecureApiStarterApplication";
     private static final String OLD_DB_NAME = "secure_api";
 
-    private ProjectConfigurator() {}
+    private ProjectConfigurator() {
+    }
 
     static void refactorProjectConfiguration(String projectFolder, String newArtifactId, String newGroupId) {
-        System.out.println("Ajustando pom.xml (artifactId y groupId)...");
+        System.out.println("[Info:]Ajustando pom.xml (artifactId y groupId)...");
         Path pomPath = Paths.get(projectFolder, "pom.xml");
 
         if (Files.exists(pomPath)) {
@@ -33,17 +34,17 @@ final class ProjectConfigurator {
                 }
 
                 Files.writeString(pomPath, content, StandardCharsets.UTF_8);
-                System.out.println("'pom.xml' actualizado con exito.");
+                System.out.println("[Info:]'pom.xml' actualizado con exito.");
             } catch (IOException e) {
-                System.err.println("Error al refactorizar el pom.xml: " + e.getMessage());
+                System.err.println("[Error:]Error al refactorizar el pom.xml: " + e.getMessage());
             }
         }
     }
 
     static void refactorApplicationProperties(String projectFolder, String newAppName) {
-        System.out.println("Ajustando properties en application.yml/yaml...");
+        System.out.println("[Info:]Ajustando properties en application.yml/yaml...");
 
-        for (String ext : new String[]{".yml", ".yaml"}) {
+        for (String ext : new String[] { ".yml", ".yaml" }) {
             Path appPath = Paths.get(projectFolder, "src", "main", "resources", "application" + ext);
             if (Files.exists(appPath)) {
                 try {
@@ -51,10 +52,12 @@ final class ProjectConfigurator {
                     if (content.contains(TEMPLATE_APP_NAME)) {
                         String updatedContent = content.replace(TEMPLATE_APP_NAME, newAppName);
                         Files.writeString(appPath, updatedContent, StandardCharsets.UTF_8);
-                        System.out.println("'application" + ext + "' actualizado con el nuevo nombre de aplicacion.");
+                        System.out
+                                .println("[Info:]'application" + ext
+                                        + "' actualizado con el nuevo nombre de aplicacion.");
                     }
                 } catch (IOException e) {
-                    System.err.println("No se pudo refactorizar application" + ext + ": " + e.getMessage());
+                    System.err.println("[Error:] No se pudo refactorizar application" + ext + ": " + e.getMessage());
                 }
             }
         }
@@ -63,7 +66,7 @@ final class ProjectConfigurator {
     static void refactorMainClassName(String projectFolder, String newClassName) {
         Path projectDir = Paths.get(projectFolder);
 
-        System.out.println("Renombrando clase principal a '" + newClassName + "'...");
+        System.out.println("[Info:]Renombrando clase principal a '" + newClassName + "'...");
 
         try (Stream<Path> walk = Files.walk(projectDir)) {
             walk.filter(Files::isRegularFile)
@@ -82,18 +85,19 @@ final class ProjectConfigurator {
                                 }
                             }
                         } catch (IOException e) {
-                            System.err.println("No se pudo actualizar referencia a " + OLD_MAIN_CLASS + " en " + path);
+                            System.err.println(
+                                    "[Error:] No se pudo actualizar referencia a " + OLD_MAIN_CLASS + " en " + path);
                         }
                     });
         } catch (IOException e) {
-            System.err.println("Error al renombrar clase principal: " + e.getMessage());
+            System.err.println("[Error:] Error al renombrar clase principal: " + e.getMessage());
         }
 
-        System.out.println("Clase principal renombrada a '" + newClassName + "'.");
+        System.out.println("[Info:]Clase principal renombrada a '" + newClassName + "'.");
     }
 
     static void refactorDatabaseName(String projectFolder, String newDbName) {
-        System.out.println("Configurando base de datos como '" + newDbName + "'...");
+        System.out.println("[Info:]Configurando base de datos como '" + newDbName + "'...");
 
         Path composePath = Paths.get(projectFolder, "docker-compose.yaml");
         if (Files.exists(composePath)) {
@@ -101,31 +105,31 @@ final class ProjectConfigurator {
                 String content = Files.readString(composePath, StandardCharsets.UTF_8);
                 String updated = content.replace(OLD_DB_NAME, newDbName);
                 Files.writeString(composePath, updated, StandardCharsets.UTF_8);
-                System.out.println("'docker-compose.yaml' actualizado con el nuevo nombre de BD.");
+                System.out.println("[Info:]'docker-compose.yaml' actualizado con el nuevo nombre de BD.");
             } catch (IOException e) {
-                System.err.println("No se pudo actualizar docker-compose.yaml: " + e.getMessage());
+                System.err.println("[Error:] No se pudo actualizar docker-compose.yaml: " + e.getMessage());
             }
         }
 
-        for (String ext : new String[]{".yml", ".yaml"}) {
+        for (String ext : new String[] { ".yml", ".yaml" }) {
             Path appPath = Paths.get(projectFolder, "src", "main", "resources", "application" + ext);
             if (Files.exists(appPath)) {
                 try {
                     String content = Files.readString(appPath, StandardCharsets.UTF_8);
                     String updated = content.replace(OLD_DB_NAME, newDbName);
                     Files.writeString(appPath, updated, StandardCharsets.UTF_8);
-                    System.out.println("'application" + ext + "' actualizado con el nuevo nombre de BD.");
+                    System.out.println("[Info:]'application" + ext + "' actualizado con el nuevo nombre de BD.");
                 } catch (IOException e) {
-                    System.err.println("No se pudo actualizar application" + ext + ": " + e.getMessage());
+                    System.err.println("[Error:] No se pudo actualizar application" + ext + ": " + e.getMessage());
                 }
             }
         }
 
-        System.out.println("Base de datos configurada como '" + newDbName + "'.");
+        System.out.println("[Info:]Base de datos configurada como '" + newDbName + "'.");
     }
 
     static void refactorEnvFile(String projectFolder, String appName, String dbType, String dbName) {
-        System.out.println("Configurando archivo .env desde .env_example...");
+        System.out.println("[Info:]Configurando archivo .env desde .env_example...");
         Path envExamplePath = Paths.get(projectFolder, ".env_example");
         Path envPath = Paths.get(projectFolder, ".env");
 
@@ -155,12 +159,12 @@ final class ProjectConfigurator {
                 }
 
                 Files.writeString(envPath, content, StandardCharsets.UTF_8);
-                System.out.println("Archivo '.env' creado y configurado con exito.");
+                System.out.println("[Info:]Archivo '.env' creado y configurado con exito.");
             } catch (IOException e) {
-                System.err.println("No se pudo configurar el archivo .env: " + e.getMessage());
+                System.err.println("[Error:]No se pudo configurar el archivo .env: " + e.getMessage());
             }
         } else {
-            System.err.println("No se encontro el archivo '.env_example' en el template.");
+            System.err.println("[Error:]No se encontro el archivo '.env_example' en el template.");
         }
     }
 }
