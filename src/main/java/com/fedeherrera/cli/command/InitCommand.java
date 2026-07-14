@@ -19,6 +19,9 @@ public class InitCommand implements Runnable {
     @Option(names = { "-db", "--db-name" }, description = "Nombre de la base de datos")
     private String dbName;
 
+    @Option(names = { "-t", "--db-type" }, description = "Tipo de base de datos (postgres, mysql, etc.)")
+    private String dbType;
+
     @Option(names = { "-o", "--output" }, description = "Directorio de salida (default: carpeta padre)")
     private String outputDir;
 
@@ -33,6 +36,7 @@ public class InitCommand implements Runnable {
 
         String calculatedArtifactId = resolveProjectName(scanner);
         resolveBasePackage(scanner, calculatedArtifactId);
+        resolveDbType(scanner);
         resolveDbName(scanner, calculatedArtifactId);
 
         Path projectDir = resolveOutputDir().resolve(calculatedArtifactId).normalize();
@@ -41,6 +45,7 @@ public class InitCommand implements Runnable {
         System.out.println("Configuracion aceptada:");
         System.out.println("Ruta:                 " + projectPath);
         System.out.println("Package Destino:      " + basePackage);
+        System.out.println("Tipo de Base de Datos:" + dbType);
         System.out.println("Base de Datos:        " + dbName + "\n");
 
         if (cloneTemplate(projectPath)) {
@@ -54,6 +59,7 @@ public class InitCommand implements Runnable {
             String newMainClass = NamingUtils.toPascalCase(calculatedArtifactId) + "Application";
             ProjectConfigurator.refactorMainClassName(projectPath, newMainClass);
             ProjectConfigurator.refactorDatabaseName(projectPath, dbName);
+            ProjectConfigurator.refactorEnvFile(projectPath, calculatedArtifactId, dbType, dbName);
 
             System.out.println("Tu API REST ha sido configurada con exito en '" + projectPath + "'!");
         }
@@ -78,6 +84,14 @@ public class InitCommand implements Runnable {
             System.out.print("Package Base [" + defaultPackage + "]: ");
             String input = scanner.nextLine().trim();
             basePackage = input.isEmpty() ? defaultPackage : input;
+        }
+    }
+
+    private void resolveDbType(Scanner scanner) {
+        if (dbType == null || dbType.trim().isEmpty()) {
+            System.out.print("Tipo de base de datos [postgres]: ");
+            String input = scanner.nextLine().trim();
+            dbType = input.isEmpty() ? "postgres" : input;
         }
     }
 

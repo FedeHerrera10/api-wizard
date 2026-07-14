@@ -123,4 +123,44 @@ final class ProjectConfigurator {
 
         System.out.println("Base de datos configurada como '" + newDbName + "'.");
     }
+
+    static void refactorEnvFile(String projectFolder, String appName, String dbType, String dbName) {
+        System.out.println("Configurando archivo .env desde .env_example...");
+        Path envExamplePath = Paths.get(projectFolder, ".env_example");
+        Path envPath = Paths.get(projectFolder, ".env");
+
+        if (Files.exists(envExamplePath)) {
+            try {
+                String content = Files.readString(envExamplePath, StandardCharsets.UTF_8);
+
+                // Reemplazar APP_NAME
+                if (content.contains("APP_NAME=")) {
+                    content = content.replaceAll("APP_NAME=[^\\r\\n]*", "APP_NAME=" + appName);
+                } else {
+                    content = "APP_NAME=" + appName + "\n" + content;
+                }
+
+                // Reemplazar DB_TYPE
+                if (content.contains("DB_TYPE=")) {
+                    content = content.replaceAll("DB_TYPE=[^\\r\\n]*", "DB_TYPE=" + dbType);
+                } else {
+                    content = "DB_TYPE=" + dbType + "\n" + content;
+                }
+
+                // Reemplazar o agregar DB_NAME
+                if (content.contains("DB_NAME=")) {
+                    content = content.replaceAll("DB_NAME=[^\\r\\n]*", "DB_NAME=" + dbName);
+                } else {
+                    content = content + "\nDB_NAME=" + dbName + "\n";
+                }
+
+                Files.writeString(envPath, content, StandardCharsets.UTF_8);
+                System.out.println("Archivo '.env' creado y configurado con exito.");
+            } catch (IOException e) {
+                System.err.println("No se pudo configurar el archivo .env: " + e.getMessage());
+            }
+        } else {
+            System.err.println("No se encontro el archivo '.env_example' en el template.");
+        }
+    }
 }
