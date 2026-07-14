@@ -93,6 +93,7 @@ java -jar api-wizard.jar init [opciones]
 | `-n`, `--name`     | Nombre del proyecto                 | `my-api`                 |
 | `-p`, `--package`  | Package base (ej: `com.acme.miapi`) | `com.fedeherrera.{name}` |
 | `-db`, `--db-name` | Nombre de la base de datos          | `{name}` en snake_case   |
+| `-t`, `--db-type`  | Tipo de base de datos               | `postgres`               |
 | `-o`, `--output`   | Directorio de salida                | Carpeta padre `../`      |
 | `-h`, `--help`     | Muestra la ayuda                    | -                        |
 | `-V`, `--version`  | Muestra la versión                  | -                        |
@@ -108,6 +109,7 @@ El asistente te guiará paso a paso:
 ```
 Nombre del proyecto [my-api]: ecommerce-api
 Package Base [com.fedeherrera.ecommerceapi]: com.acme.ecommerce
+Tipo de base de datos [postgres]: mysql
 Nombre de la Base de Datos [ecommerce_api]:
 ```
 
@@ -117,6 +119,7 @@ Nombre de la Base de Datos [ecommerce_api]:
 java -jar api-wizard.jar init \
   -n ecommerce-api \
   -p com.acme.ecommerce \
+  -t mysql \
   -db ecommerce_db \
   -o ~/workspace
 ```
@@ -134,6 +137,7 @@ Cuando ejecutás `init`, el wizard realiza estas transformaciones automáticamen
 5. **Configura** `application.yml` con el nombre de la aplicación
 6. **Renombra** la clase principal a `{Proyecto}Application`
 7. **Aplica** el nombre de la base de datos en `docker-compose.yaml` y `application.yml`
+8. **Copia** `.env_example` a `.env` y configura las variables `APP_NAME`, `DB_TYPE` y `DB_NAME` con los valores indicados.
 
 ### Árbol de Directorio Generado
 
@@ -171,6 +175,7 @@ java -jar api-wizard.jar init -n blog-api
 java -jar api-wizard.jar init \
   -n inventario-api \
   -p com.empresa.inventario \
+  -t postgres \
   -db inventario_db \
   -o ~/dev
 
